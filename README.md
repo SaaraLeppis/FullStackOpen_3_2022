@@ -20,3 +20,7 @@ to run
 ```shell
 npm run dev
 ```
+
+### How to remove node_modules from gitHub
+
+[check it here](https://gist.github.com/lmcneel/45594e550a3403d589bdcaad38138a83)
