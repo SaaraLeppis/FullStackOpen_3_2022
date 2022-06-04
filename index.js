@@ -1,4 +1,5 @@
 const express = require('express');
+const { param } = require('express/lib/request');
 const app = express();
 
 let persons =
@@ -34,6 +35,22 @@ app.get('/info', (request, response) => {
 
     response.send(`<p>Phonebook has info for ${contacts} people. </p>
     <p>${timeStamp}</p>`)
+})
+app.get('/api/persons/:id', (request, response) => {
+    const id = +request.params.id;
+    const person = persons.find(person => person.id === id);
+    if (person) {
+        response.json(person)
+    } else {
+        response.status(404).end()
+    }
+})
+
+app.delete('/api/persons/:id', (request, repsonse) => {
+    const id = +request.params.id;
+    persons = persons.filter(person => person.id !== id)
+    repsonse.status(204).end();
+
 })
 
 const PORT = 3001;
