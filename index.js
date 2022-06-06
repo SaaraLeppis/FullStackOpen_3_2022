@@ -1,6 +1,9 @@
+const { response } = require('express');
 const express = require('express');
 const { param } = require('express/lib/request');
 const app = express();
+
+app.use(express.json())
 
 let persons =
     [
@@ -24,18 +27,36 @@ let persons =
             number: "39-23-6423122",
             id: 4
         }
-    ]
+    ];
 
+//helper functions
+const newValue = () => {
+    const randomInteger = Math.floor(Math.random() * 1000);
+    if (persons.find(person => person.id === randomInteger)) {
+        return (newValue())
+    }
+    else {
+        return randomInteger;
+    }
+};
+const isUnique = (name) => {
+    if (persons.find(person => person.name.toLowerCase() === name.toLowerCase())) {
+        return false
+    }
+    return true;
+};
+
+// functionalities 
 app.get('/api/persons', (request, response) => {
     response.json(persons)
-})
+});
 app.get('/info', (request, response) => {
     const timeStamp = Date();
     const contacts = persons.length;
 
     response.send(`<p>Phonebook has info for ${contacts} people. </p>
     <p>${timeStamp}</p>`)
-})
+});
 app.get('/api/persons/:id', (request, response) => {
     const id = +request.params.id;
     const person = persons.find(person => person.id === id);
@@ -44,16 +65,39 @@ app.get('/api/persons/:id', (request, response) => {
     } else {
         response.status(404).end()
     }
-})
-
-app.delete('/api/persons/:id', (request, repsonse) => {
+});
+app.delete('/api/persons/:id', (request, response) => {
     const id = +request.params.id;
     persons = persons.filter(person => person.id !== id)
-    repsonse.status(204).end();
+    response.status(204).end();
+});
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+    if (!body.name) {
+        return response.status(400).json({
+            error: 'name is missing'
+        })
+    } else if (!body.number) {
+        return response.status(400).json({
+            error: 'number is missing'
+        })
+    } else if (!isUnique(body.name)) {
+        return response.status(400).json({
+            error: 'name must be unique'
+        })
+    }
+    const newId = newValue();
 
-})
+    const newperson = {
+        name: body.name,
+        number: body.number,
+        id: newId
+    }
+    persons = [...persons, newperson]
+    response.json(newperson)
+});
 
 const PORT = 3001;
 app.listen(PORT, () => {
     console.log(`Server running at localhost:${PORT}`)
-})
+});
