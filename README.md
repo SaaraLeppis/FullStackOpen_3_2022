@@ -1,5 +1,8 @@
 # Backend for FullStackOpen 2022 course
 
+Runs in address
+[muneka-deploy.herokuapp.com](https://muneka-deploy.herokuapp.com)
+
 **Middlewares are run in the order they are presented.**
 
 They must be taken **to use before routes**.
@@ -50,6 +53,14 @@ CORS is a node.js package for providing a Connect/Express middleware that can be
 
 ```shell
 npm install cors
+```
+
+## Heroku
+
+Remember to use
+
+```js
+const PORT = process.env.PORT || 3001;
 ```
 
 ### Reminder: How to remove node_modules from gitHub
