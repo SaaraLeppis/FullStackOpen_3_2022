@@ -2,6 +2,16 @@
 
 Runs in address
 [muneka-deploy.herokuapp.com](https://muneka-deploy.herokuapp.com)
+<br />
+<br />
+
+**! important:** set your MongoDB URI (with username and password) and port to .env file
+
+> MONGODB_URI=[your mongoDB URI]
+> PORT = [used port]
+
+<br /> 
+<br />
 
 **Middlewares are run in the order they are presented.**
 
@@ -61,6 +71,12 @@ Remember to use
 
 ```js
 const PORT = process.env.PORT || 3001;
+```
+
+Remember to give config variables (.env file's content) to Heroku. by settings in heroku's site or
+
+```shell
+heroku config:set MONGODB_URI='mongodb+srv://<username>:<pasdsword>@cluster0.o1opl.mongodb.net/noteApp?retryWrites=true&w=majority'
 ```
 
 ### Reminder: How to remove node_modules from gitHub
