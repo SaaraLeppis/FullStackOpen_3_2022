@@ -15,7 +15,7 @@ mongoose.connect(url)
 
 const personSchema = new mongoose.Schema({
     name: String,
-    phoneNumber: String,
+    number: String,
 });
 
 // to delte _id and _v from person object
