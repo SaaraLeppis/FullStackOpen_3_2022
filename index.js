@@ -5,33 +5,28 @@ const cors = require('cors');
 
 const app = express();
 const Person = require('./models/person');
-const { request } = require('express');
+
 
 // morgan token 
 morgan.token('postPerson', (req, res) => {
     return req.method === 'POST' ? JSON.stringify(req.body) : ''
 });
 
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:  ', request.path)
+    console.log('Body:  ', request.body)
+    console.log('---')
+    next()
+}
+
 app.use(express.static('build'));
 app.use(express.json());
+
+app.use(requestLogger);
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :postPerson'));
 app.use(cors());
 
-const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
-};
-app.use(unknownEndpoint);
-
-// error handler middleware
-const errorHandler = (error, request, response, next) => {
-    console.log(error.message)
-    if (error.name === 'CastError') {
-        return response.status(400).send({ error: 'malformatted id' })
-    }
-    next(error)
-};
-//registery of errorHandler middleware after all others!!
-app.use(errorHandler);
 
 // let persons =
 //     [
@@ -160,6 +155,22 @@ app.post('/api/persons', (request, response) => {
             response.json(savedPerson)
         })
 });
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+};
+app.use(unknownEndpoint);
+
+// error handler middleware
+const errorHandler = (error, request, response, next) => {
+    console.log(error.message)
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+    next(error)
+};
+//registery of errorHandler middleware after all others!!
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
