@@ -121,6 +121,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
+    console.log('backend body post', body)
     // if (!body.name) {
     //     return response.status(400).json({
     //         error: 'name is missing'
@@ -148,7 +149,7 @@ app.post('/api/persons', (request, response) => {
     }
     const person = new Person({
         name: body.name,
-        phoneNumber: body.number
+        number: body.number
     });
     person.save()
         .then(savedPerson => {
