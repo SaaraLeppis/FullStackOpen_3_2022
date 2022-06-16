@@ -121,13 +121,12 @@ app.delete('/api/persons/:id', (request, response, next) => {
     // persons = persons.filter(person => person.id !== id)
     // response.status(204).end();
     Person.findByIdAndDelete(request.params.id)
-        .then(result => { response.status(204).end() })
+        .then(() => { response.status(204).end() })
         .catch(error => next(error))
 });
 
 app.post('/api/persons', (request, response, next) => {
     const body = request.body
-    console.log('backend body post', body)
     // if (!body.name) {
     //     return response.status(400).json({
     //         error: 'name is missing'
@@ -166,11 +165,12 @@ app.post('/api/persons', (request, response, next) => {
 //update 3.17
 app.put('/api/persons/:id', (request, response, next) => {
     const { name, number } = request.body;
+    console.log(name, number, { name, number })
     // const person = {
     //     name: body.name,
     //     number: body.number
     // };
-    Person.findByIdAndUpdate(request.params.id, { name, number }, { new: true, runValidators: true, context: 'query' })
+    Person.findByIdAndUpdate(request.params.id, { name, number }, { new: true, context: 'query' })
         .then(updatePerson => {
             response.json(updatePerson)
         })
